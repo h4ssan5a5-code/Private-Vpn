@@ -1,0 +1,40 @@
+{
+  "name": "nordshield-vpn",
+  "version": "1.0.0",
+  "description": "A desktop VPN client MVP built with Electron.js",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --inspect",
+    "build": "electron-builder"
+  },
+  "keywords": ["vpn", "electron", "desktop", "wireguard", "openvpn"],
+  "author": "NordShield",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.nordshield.vpn",
+    "productName": "NordShield VPN",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "backend/**/*",
+      "frontend/**/*",
+      "config/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.utilities"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}

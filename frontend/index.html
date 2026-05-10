@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Content Security Policy: restricts what can load -->
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self';" />
+  <title>NordShield VPN</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════════
+       CUSTOM TITLE BAR (frameless window)
+  ═══════════════════════════════════════════════════ -->
+  <div class="title-bar" id="titleBar">
+    <div class="title-bar__logo">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z" fill="currentColor" opacity="0.9"/>
+        <path d="M9 12l2 2 4-4" stroke="#0d0f14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="title-bar__name">NordShield</span>
+    </div>
+    <div class="title-bar__controls">
+      <button class="title-btn title-btn--minimize" id="btnMinimize" title="Minimize">
+        <svg viewBox="0 0 12 12"><rect x="1" y="5.5" width="10" height="1" rx="0.5" fill="currentColor"/></svg>
+      </button>
+      <button class="title-btn title-btn--close" id="btnClose" title="Close">
+        <svg viewBox="0 0 12 12"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       MAIN APP CONTAINER
+  ═══════════════════════════════════════════════════ -->
+  <div class="app">
+
+    <!-- ── STATUS CARD ──────────────────────────────── -->
+    <section class="status-card" id="statusCard">
+
+      <!-- Animated shield graphic -->
+      <div class="shield-wrap">
+        <div class="shield-rings">
+          <div class="ring ring--1"></div>
+          <div class="ring ring--2"></div>
+          <div class="ring ring--3"></div>
+        </div>
+        <div class="shield-icon" id="shieldIcon">
+          <svg viewBox="0 0 64 64" fill="none">
+            <path d="M32 4L8 16v16c0 18.4 11.5 34.5 24 38 12.5-3.5 24-19.6 24-38V16L32 4z" fill="currentColor"/>
+            <path d="M22 32l7 7 13-14" stroke="#0d0f14" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="shield-check"/>
+            <path d="M22 32l7 7 13-14" stroke="#0d0f14" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" opacity="0" class="shield-check-hidden"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Status label & IP -->
+      <div class="status-info">
+        <div class="status-badge" id="statusBadge">
+          <span class="status-dot" id="statusDot"></span>
+          <span class="status-text" id="statusText">Disconnected</span>
+        </div>
+        <div class="ip-row">
+          <span class="ip-label">Your IP:</span>
+          <span class="ip-address" id="ipAddress">Loading…</span>
+          <span class="ip-tag" id="ipTag">REAL</span>
+        </div>
+      </div>
+
+      <!-- Connection stats (visible when connected) -->
+      <div class="stats-row" id="statsRow" style="display:none">
+        <div class="stat-item">
+          <span class="stat-label">Server</span>
+          <span class="stat-value" id="statServer">—</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-label">Country</span>
+          <span class="stat-value" id="statCountry">—</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-label">Uptime</span>
+          <span class="stat-value" id="statUptime">00:00</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ── SERVER SELECTOR ──────────────────────────── -->
+    <section class="server-section">
+      <label class="section-label" for="serverSelect">Select Server</label>
+      <div class="select-wrap" id="serverSelectWrap">
+        <div class="select-trigger" id="selectTrigger" role="button" tabindex="0" aria-haspopup="listbox">
+          <div class="select-trigger__left">
+            <span class="server-flag" id="selectedFlag">🌍</span>
+            <div class="server-meta">
+              <span class="server-meta__name" id="selectedName">Choose a server…</span>
+              <span class="server-meta__detail" id="selectedDetail">—</span>
+            </div>
+          </div>
+          <svg class="select-chevron" id="selectChevron" viewBox="0 0 24 24" fill="none">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <!-- Dropdown list -->
+        <ul class="server-list" id="serverList" role="listbox">
+          <!-- Populated by JS from servers.js -->
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── CONNECT BUTTON ───────────────────────────── -->
+    <section class="connect-section">
+      <button class="connect-btn" id="connectBtn" disabled>
+        <span class="connect-btn__bg"></span>
+        <span class="connect-btn__content">
+          <svg class="connect-btn__icon" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.35C17.25 22.15 21 17.25 21 12V7L12 2z" fill="currentColor"/>
+          </svg>
+          <span class="connect-btn__label" id="connectBtnLabel">Connect</span>
+        </span>
+        <span class="connect-btn__loader" id="connectLoader">
+          <span class="spinner"></span>
+          <span>Connecting…</span>
+        </span>
+      </button>
+    </section>
+
+    <!-- ── ACTIVITY LOG ─────────────────────────────── -->
+    <section class="log-section">
+      <div class="log-header">
+        <span class="section-label">Activity Log</span>
+        <button class="log-clear-btn" id="logClearBtn" title="Clear logs">Clear</button>
+      </div>
+      <div class="log-console" id="logConsole">
+        <div class="log-empty" id="logEmpty">No activity yet.</div>
+      </div>
+    </section>
+
+  </div><!-- /.app -->
+
+  <!-- Scripts — loaded at the end for performance -->
+  <script src="js/servers.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
